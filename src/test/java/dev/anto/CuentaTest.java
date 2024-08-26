@@ -1,63 +1,54 @@
 package dev.anto;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-class CuentaTest {
 
-    private Cuenta cuenta;
+public class CuentaTest {
+
+       private Cuenta cuenta;
 
     @BeforeEach
-    void setUp() {
-        
-        cuenta = new Cuenta(1000, 12);
+    public void setUp() {
+        cuenta = new Cuenta(1000.0f, 0.12f); 
     }
 
     @Test
-    void testConsignar() {
-        cuenta.consignar(500);
-        assertEquals(1500, cuenta.saldo, 0.01);
+    public void testConsignar() {
+        cuenta.consignar(500.0f);
+        assertEquals(1500.0f, cuenta.saldo, 0.001f);
         assertEquals(1, cuenta.numConsignaciones);
     }
 
     @Test
-    void testRetirar_SaldoSuficiente() {
-    boolean resultado = cuenta.retirar(300);
-    System.out.println("Resultado del retiro: " + resultado);
-    System.out.println("Saldo después del retiro: " + cuenta.saldo);
-    System.out.println("Número de retiros: " + cuenta.numRetiros);
-    
-    assertTrue(resultado);
-    assertEquals(700, cuenta.saldo, 0.01);
-    assertEquals(1, cuenta.numRetiros);
-}
-
-    
+    public void testRetirarExitoso() {
+        cuenta.retirar(400.0f);
+        assertEquals(600.0f, cuenta.saldo, 0.001f);
+        assertEquals(1, cuenta.numRetiros);
+    }
 
     @Test
-    void testRetirar_SaldoInsuficiente() {
-        boolean resultado = cuenta.retirar(1200);
-        assertFalse(resultado);
-        assertEquals(1000, cuenta.saldo, 0.01);
+    public void testRetirarFallido() {
+        cuenta.retirar(1200.0f);
+        assertEquals(1000.0f, cuenta.saldo, 0.001f);
         assertEquals(0, cuenta.numRetiros);
     }
 
     @Test
-    void testCalcularInteresMensual() {
-        cuenta.calcularInteresMensual();
-        assertEquals(1010, cuenta.saldo, 0.01); 
+    public void testCalcularInteres() {
+        cuenta.calcularInterés();
+        assertEquals(1010.0f, cuenta.saldo, 0.001f); 
     }
-    @Test
-     void testExtractoMensual() {
-     cuenta.comisionMensual = 10;
-     cuenta.extractoMensual();
-     assertEquals(999.9, cuenta.saldo, 0.01); 
-}
 
     @Test
-    void testImprimir() {
-        cuenta.imprimir(); 
-    }
-}
+    public void testExtractoMensual() {
+        cuenta.consignar(500.0f);
+        cuenta.retirar(200.0f);
+        cuenta.comMensual = 10.0f;
+        cuenta.extractoMensual();
 
+        assertEquals(1302.9f, cuenta.saldo, 0.001f); 
+    }
+    
+}
